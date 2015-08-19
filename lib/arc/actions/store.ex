@@ -1,5 +1,5 @@
 defmodule Arc.Actions.Store do
-  @version_timeout 10000 #milliseconds
+  @version_timeout 100000 #milliseconds
 
   defmacro __using__(_) do
     quote do
@@ -32,7 +32,9 @@ defmodule Arc.Actions.Store do
     end
   end
 
+  defp gen_subfolder, do: UUID.uuid1()
   defp put_versions(definition, {file, scope}) do
+    scope = Dict.put(scope, :sub_folder, gen_subfolder)
     definition.__versions
     |> Enum.map(fn(r) -> async_put_version(definition, r, {file, scope}) end)
     |> Enum.each(fn(task) -> Task.await(task, @version_timeout) end)
