@@ -45,7 +45,7 @@ defmodule Arc.Mixfile do
   defp deps do
     [
       # {:erlcloud, "~> 0.9.0"},
-      {:erlcloud, "~> 0.9.0, [hex: :erlcloud, github: "connectica/erlcloud"]},
+      {:erlcloud, "~> 0.9.0", [hex: :erlcloud, github: "connectica/erlcloud"]},
       {:mock, "~> 0.1.1", only: :test}
     ]
   end
