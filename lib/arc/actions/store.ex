@@ -26,15 +26,15 @@ defmodule Arc.Actions.Store do
   defp put(definition, {%Arc.File{}=file, scope}) do
     case definition.validate({file, scope}) do
       true ->
+        scope = Dict.put(scope, :sub_folder, gen_subfolder)
         put_versions(definition, {file, scope})
-        {:ok, file.file_name}
+        {:ok, file.file_name, scope.sub_folder}
       _ -> {:error, :invalid_file}
     end
   end
 
   defp gen_subfolder, do: UUID.uuid1()
   defp put_versions(definition, {file, scope}) do
-    scope = Dict.put(scope, :sub_folder, gen_subfolder)
     definition.__versions
     |> Enum.map(fn(r) -> async_put_version(definition, r, {file, scope}) end)
     |> Enum.each(fn(task) -> Task.await(task, @version_timeout) end)
