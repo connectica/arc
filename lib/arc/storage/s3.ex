@@ -7,7 +7,7 @@ defmodule Arc.Storage.S3 do
     {:ok, binary} = File.read(file.path)
     acl = definition.acl(version, {file, scope})
     :erlcloud_s3.put_object(bucket, s3_key, binary, [acl: acl], erlcloud_config)
-    file.file_name
+    {file.file_name, s3_key}
   end
 
   def url(definition, version, file_and_scope, options \\ []) do
